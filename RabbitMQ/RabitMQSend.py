@@ -16,9 +16,9 @@ connection = pika.BlockingConnection(connection_parameters)
 # Create a communication channel
 channel = connection.channel()
 # create queue Hello
-queuename='app1_queue'
-exchangename='app1_exchange'
-queueroutingkey='app1Key'
+queuename='myqueue'
+exchangename='myexchange'
+queueroutingkey='my_routing_key'
 MessageBody='Hello word'
 #channel.queue_declare(queue=queuename,durable=True)
 # push message to queue hello
