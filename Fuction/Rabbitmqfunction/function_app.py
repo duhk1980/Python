@@ -19,13 +19,20 @@ def HttpToRabbitMQ(req: func.HttpRequest) -> func.HttpResponse:
             status_code=400
         )
     if message:
-        # Define the RabbitMQ connection parameters
-        connection_params = pika.ConnectionParameters('localhost')
-    
-        # Establish a connection to RabbitMQ
-        connection = pika.BlockingConnection(connection_params)
-        channel = connection.channel()
+        # Define connection parameters with a specific port and vhost
+        connection_parameters = pika.ConnectionParameters(
+            host='localhost',
+            port=5672,
+            virtual_host='my_vhost',
+            credentials=pika.PlainCredentials('guest', 'guest')
+        )
 
+        # Establish the connection
+        connection = pika.BlockingConnection(connection_parameters)
+
+        # Create a communication channel
+        channel = connection.channel()
+        
         # Declare a queue (if it doesn't exist)
         queue_name = 'myqueue'
         channel.queue_declare(queue=queue_name)

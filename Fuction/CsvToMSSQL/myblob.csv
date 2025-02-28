@@ -1,0 +1,11 @@
+ProductID,ProductName,Category,Price,Stock
+1, Widget A, Category1, 25.50, 100
+2, , Category2, 15.00, 200
+3, Widget C, Category3, Twenty, 300
+4, Widget D, Category4, 30.00,
+5, Widget E, Category5, 40.50, 400
+1, Widget F, Category6, 50.75, 150
+, Widget G, Category7, 60.00, 250
+7, Widget H, Category8, 70.25, -50
+8, Widget I, Category9, 80.00, 350
+9, , , 90.00, 450

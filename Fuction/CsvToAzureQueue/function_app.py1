@@ -1,0 +1,40 @@
+import logging
+import azure.functions as func
+import pandas as pd
+import os
+import xml.etree.ElementTree as ET
+from azure.storage.queue import (
+    QueueClient,
+    BinaryBase64EncodePolicy,
+    BinaryBase64DecodePolicy,
+    QueueMessage
+)
+app = func.FunctionApp()
+
+@app.function_name(name="mytimer")
+@app.timer_trigger(schedule="0 */1 * * * *", 
+              arg_name="mytimer",
+              run_on_startup=True) 
+def test_function(mytimer: func.TimerRequest) -> None:
+
+    # Setup Connection to azurequeue
+    queue_sas_url = os.getenv('AZURE_STORAGE_QUEUE_SAS_URL') or "http://127.0.0.1:10001/devstoreaccount1/productcatalog?sv=2020-08-04&st=2025-02-24T01%3A38%3A25Z&se=2025-02-25T01%3A38%3A25Z&sp=rau&sig=jl5v4aLSwjfDDKH8rEuE9dOev1R%2FbPbCIdE%2BejOHJS0%3D"
+
+    if not queue_sas_url:
+        raise ValueError("AZURE_STORAGE_QUEUE_SAS_URL is not set in the environment variables.")
+
+    try:
+        # Insert XML data into Azure Queue named "productcatalog"
+        queue_client = QueueClient.from_queue_url(queue_sas_url)
+
+        # Setup Base64 encoding and decoding functions
+        queue_client.message_encode_policy = BinaryBase64EncodePolicy()
+        queue_client.message_decode_policy = BinaryBase64DecodePolicy()
+
+        # Log to test connection success
+        logging.info('Connection to Azure Queue successful.')
+
+    except Exception as e:
+        logging.error(f"An error occurred: {e}")
+
+    # ... (rest of your code)
