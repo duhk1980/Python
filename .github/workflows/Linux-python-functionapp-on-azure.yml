@@ -14,6 +14,9 @@ env:
   AZURE_FUNCTIONAPP_NAME: 'Httptriggerauthen'   # set this to your function app name on Azure
   AZURE_FUNCTIONAPP_PACKAGE_PATH: './Fuction/Authentication/WorkingWithAuthentication/'       # set this to the path to your function app project, defaults to the repository root
   PYTHON_VERSION: '3.11.9'                     # set this to the python version to use (e.g. '3.6', '3.7', '3.8') python --version to check
+  AZURE_RESOURCEGROUP_NAME: 'Httptriggerauthen_group'
+  SCOPE: '/subscriptions/17dea6db-4356-4e02-90e0-8dd67183a800/resourceGroups/NetworkWatcherRG/providers/Microsoft.Storage/storageAccounts/cloudshelltechlabvn'
+
 
 jobs:
   build-and-deploy:
@@ -45,5 +48,15 @@ jobs:
         publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
         scm-do-build-during-deployment: true
         enable-oryx-build: true
-
+    # Add step to enable system-assigned identity function app
+    - name: 'Enable System-Assigned Identity'
+      shell: bash
+      run: |
+        az functionapp identity assign --name ${{ env.AZURE_FUNCTIONAPP_NAME }} --resource-group ${{ env.AZURE_RESOURCEGROUP_NAME }}
+    # Add step to assign Storage Blob Data Contributor role
+    - name: 'Assign Blob Data Contributor Role'
+      shell: bash
+      run: |
+        PRINCIPAL_ID=$(az functionapp identity show --name ${{ env.AZURE_FUNCTIONAPP_NAME }} --resource-group ${{ env.AZURE_RESOURCEGROUP_NAME }} --query principalId -o tsv)
+        az role assignment create --assignee $PRINCIPAL_ID --role "Storage Blob Data Contributor" --scope ${{ env.SCOPE }}
 # For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
