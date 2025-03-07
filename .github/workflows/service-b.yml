@@ -17,6 +17,7 @@ jobs:
         run: echo "HelloWorld from Service B Task B1"
 
       # Task 2: Print HelloWorld for Task B2
+      - name: Task B2
         run: echo "HelloWorld from Service B Task B2"
 
       # Task 3: Print HelloWorld for Task B3
