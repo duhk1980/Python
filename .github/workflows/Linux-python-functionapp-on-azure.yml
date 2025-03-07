@@ -3,7 +3,8 @@ name: Deploy Python project to Azure Function App
 on:
   push:
     paths:
-        - 'Function/Authentication/WorkingWithAuthentication/**'
+      - 'Function/Authentication/WorkingWithAuthentication/**'
+
 # CONFIGURATION
 # For help, go to https://github.com/Azure/Actions
 #
