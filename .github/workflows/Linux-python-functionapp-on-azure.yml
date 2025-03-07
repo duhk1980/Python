@@ -1,7 +1,7 @@
 name: Deploy Python project to Azure Function App new c
 
 on:
-  push:
+  pull_request:
     branches:
     -  main
     paths:
