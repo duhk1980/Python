@@ -1,0 +1,24 @@
+name: Deploy Service B
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'services/service-b/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Task 1: Print HelloWorld for Task B1
+      - name: Task B1
+        run: echo "HelloWorld from Service B Task B1"
+
+      # Task 2: Print HelloWorld for Task B2
+        run: echo "HelloWorld from Service B Task B2"
+
+      # Task 3: Print HelloWorld for Task B3
+      - name: Task B3
+        run: echo "HelloWorld from Service B Task B3"
