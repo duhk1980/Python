@@ -1,0 +1,43 @@
+import azure.functions as func
+import logging
+from azure.identity import ManagedIdentityCredential
+from azure.storage.blob import BlobServiceClient
+
+app = func.FunctionApp()
+
+@app.route(route="HttpTriggerWithAuthen", auth_level=func.AuthLevel.FUNCTION)
+def HttpTriggerWithAuthen(req: func.HttpRequest) -> func.HttpResponse:
+    CLIENT_ID = "cb01ef83-1f70-4056-ba49-32bfb4cb724f"
+    ACCOUNT_NAME = "cloudshelltechlabvn"
+    CONTAINER_NAME = "upload"
+
+    # Logging
+    logging.info('Using ManagedIdentityCredential for cloud deployment.')
+    credentials = ManagedIdentityCredential(client_id=CLIENT_ID)
+
+    # Create the BlobClient using the appropriate credentials
+    blob_service_url = f"https://{ACCOUNT_NAME}.blob.core.windows.net"
+    blob_service_client = BlobServiceClient(blob_service_url, credential=credentials)
+
+    # Create a BlobClient
+    blob_name = 'NewFile'
+    file_path = './upload.txt'
+    blob_client = blob_service_client.get_blob_client(container=CONTAINER_NAME, blob=blob_name)
+
+    # Upload the file
+    try:
+        with open(file_path, 'rb') as file:
+            blob_client.upload_blob(file, overwrite=True)
+        logging.info(f'File {file_path} uploaded to {CONTAINER_NAME}/{blob_name} successfully.')
+
+        # List all blobs in the container
+        logging.info("\n==============LIST OF ALL BLOBS=================")
+        container_client = blob_service_client.get_container_client(CONTAINER_NAME)
+        blob_list = [blob.name for blob in container_client.list_blobs()]
+        for blob in blob_list:
+            logging.info("\t Blob name: " + blob)
+
+        return func.HttpResponse('Finished execution Function running successfully', status_code=200)
+    except Exception as e:
+        logging.error(f'Error: {e}')
+        return func.HttpResponse(f'Error: {e}', status_code=500)
