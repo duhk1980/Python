@@ -3,6 +3,8 @@ name: Deploy Python project to Azure Function App new c
 on:
   push:
     branches: ['main']
+    paths:
+      - 'Fuction/Authentication/WorkingWithAuthentication/**'
 
 
     
