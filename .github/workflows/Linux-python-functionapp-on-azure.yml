@@ -1,13 +1,13 @@
 name: Deploy Python project to Azure Function App new c
 
 on:
-  pull_request:
+  push:
     branches:
     -  main
     paths:
     - 'Function/Authentication/WorkingWithAuthentication/**'
-    - 'Function/**'
-
+    - '.github/workflows'
+    
 # CONFIGURATION
 # For help, go to https://github.com/Azure/Actions
 #
